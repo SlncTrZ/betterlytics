@@ -37,9 +37,16 @@ export const EMAIL_TYPES = {
     saasOnly: true,
     retry: DEFAULT_RETRY,
   },
-  'report': {
+  report: {
     template: createReportEmailTemplate,
     saasOnly: false,
+    retry: DEFAULT_RETRY,
+  },
+  'data-retention-clamp': {
+    template: () => {
+      throw new Error('TODO');
+    },
+    saasOnly: true,
     retry: DEFAULT_RETRY,
   },
 } as const;

@@ -1,4 +1,5 @@
 import { emailReportsJob } from '@/worker/jobs/reports/email-reports.job';
 import { sendEmailJob } from '@/worker/jobs/email/send-email.job';
+import { retentionPurgeJob } from './data-retention/retention-purge.job';
 
-export const JOB_REGISTRY = [emailReportsJob, sendEmailJob];
+export const JOB_REGISTRY = [emailReportsJob, sendEmailJob, retentionPurgeJob];
