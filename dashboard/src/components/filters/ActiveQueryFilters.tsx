@@ -1,5 +1,7 @@
 'use client';
+import { useMemo } from 'react';
 import { useQueryFiltersContext } from '@/contexts/QueryFiltersContextProvider';
+import { useIsFilterColumnAllowed } from '@/hooks/use-is-filter-column-allowed';
 import { Badge } from '../ui/badge';
 import { XIcon } from 'lucide-react';
 import { formatQueryFilter } from '@/utils/queryFilterFormatters';
@@ -8,15 +10,21 @@ import { useTranslations, useLocale } from 'next-intl';
 
 export function ActiveQueryFilters() {
   const { queryFilters, removeQueryFilter } = useQueryFiltersContext();
+  const isFilterColumnAllowed = useIsFilterColumnAllowed();
   const t = useTranslations('components.filters');
   const locale = useLocale();
 
-  if (queryFilters.length === 0) {
+  const visibleFilters = useMemo(
+    () => queryFilters.filter((filter) => isFilterColumnAllowed(filter.column)),
+    [queryFilters, isFilterColumnAllowed],
+  );
+
+  if (visibleFilters.length === 0) {
     return null;
   }
   return (
     <div className='flex flex-wrap gap-1 sm:justify-end'>
-      {queryFilters.map((filter) => {
+      {visibleFilters.map((filter) => {
         const strategy = getFilterStrategy(filter.column);
         return (
           <Badge

@@ -17,14 +17,13 @@ import {
 } from '@/components/ba-dropdown-menu';
 import { FILTER_COLUMN_SELECT_OPTIONS } from '@/components/filters/filterColumnOptions';
 import { useDashboardAuth } from '@/contexts/DashboardAuthProvider';
-import { type FilterColumn, type QueryFilter } from '@/entities/analytics/filter.entities';
+import { type QueryFilter } from '@/entities/analytics/filter.entities';
 import { getFilterStrategy } from '@/entities/analytics/filterColumnStrategy';
+import { useIsFilterColumnAllowed } from '@/hooks/use-is-filter-column-allowed';
 import { cn } from '@/lib/utils';
 import { ChevronDownIcon, TagsIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Dispatch } from 'react';
-
-const DEMO_ALLOWED_COLUMNS = new Set<FilterColumn>(['url', 'device_type']);
 
 type FilterColumnDropdownProps<TEntity> = {
   filter: QueryFilter & TEntity;
@@ -42,13 +41,16 @@ export function FilterColumnDropdown<TEntity>({
   const t = useTranslations('components.filters');
   const tDemo = useTranslations('components.demoMode');
   const { isDemo } = useDashboardAuth();
+  const isFilterColumnAllowed = useIsFilterColumnAllowed();
 
   const strategy = getFilterStrategy(filter.column);
   const columnLabel = strategy.type === 'standard' ? t(`columns.${strategy.key}`) : strategy.key;
   const triggerIcon =
-    strategy.type === 'json_property'
-      ? <TagsIcon />
-      : FILTER_COLUMN_SELECT_OPTIONS.find((opt) => opt.value === strategy.key)?.icon;
+    strategy.type === 'json_property' ? (
+      <TagsIcon />
+    ) : (
+      FILTER_COLUMN_SELECT_OPTIONS.find((opt) => opt.value === strategy.key)?.icon
+    );
 
   return (
     <div className={cn('flex flex-col', className)}>
@@ -56,19 +58,17 @@ export function FilterColumnDropdown<TEntity>({
         <BADropdownMenuTrigger asChild>
           <button
             className={cn(
-              'flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 shadow-xs',
+              'border-input flex h-9 w-full items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 shadow-xs',
               'cursor-pointer text-sm whitespace-nowrap outline-none',
               'dark:bg-input/30 dark:hover:bg-input/50',
               'data-[placeholder]:text-muted-foreground',
               '[&_svg]:text-muted-foreground [&_svg:not([class*="size-"])]:size-4',
-              'focus-visible:border-ring focus-visible:ring focus-visible:ring-ring/50',
+              'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring',
             )}
           >
             <span className='flex items-center gap-2 [&_svg]:shrink-0'>
               {triggerIcon}
-              <span className='truncate'>
-                {columnLabel}
-              </span>
+              <span className='truncate'>{columnLabel}</span>
             </span>
             <ChevronDownIcon className='opacity-50' />
           </button>
@@ -82,7 +82,7 @@ export function FilterColumnDropdown<TEntity>({
           </BADropdownMenuLabel>
           <BADropdownMenuGroup>
             {FILTER_COLUMN_SELECT_OPTIONS.map((column) => {
-              const disabled = isDemo && !DEMO_ALLOWED_COLUMNS.has(column.value);
+              const disabled = !isFilterColumnAllowed(column.value);
               const active = filter.column === column.value;
               return (
                 <BADropdownMenuItem
