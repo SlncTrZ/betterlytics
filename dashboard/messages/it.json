@@ -2399,6 +2399,7 @@
         "title": "Filtri",
         "emptyNoneSelected": "Nessun filtro selezionato - premi Applica per salvare",
         "addFilter": "Aggiungi filtro",
+        "addFilterPlaceholder": "Aggiungi uno o più filtri",
         "cancel": "Annulla",
         "apply": "Applica",
         "selectValue": "Seleziona un valore",
@@ -2441,7 +2442,20 @@
         "create": "Crea",
         "createDisabledHint": "Inserisci un nome per il funnel e definisci almeno due passaggi. <br></br> Ogni passaggio deve avere sia un nome che un valore selezionato.",
         "successMessage": "Funnel creato!",
-        "errorMessage": "Creazione funnel fallita!"
+        "errorMessage": "Creazione funnel fallita!",
+        "filterCount": {
+          "none": "Nessun filtro",
+          "one": "1 filtro",
+          "many": "{count} filtri"
+        },
+        "aria": {
+          "deleteStep": "Elimina passaggio {index}",
+          "reorderStep": "Riordina passaggio {index}",
+          "toggleStep": "Mostra/nascondi passaggio {index}"
+        },
+        "tooltip": {
+          "deleteStep": "Elimina questo passaggio del funnel"
+        }
       },
       "edit": {
         "title": "Modifica funnel",

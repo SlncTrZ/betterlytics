@@ -43,16 +43,20 @@ export function CloneFunnelDialog({ funnel, disabled }: CloneFunnelDialogProps) 
     setFunnelSteps,
     updateFunnelStep,
     removeFunnelStep,
-    searchableFunnelSteps,
     funnelPreview,
     emptySteps,
-    isPreviewLoading,
+    previewStatus,
+    previewRefetching,
     reset,
   } = useFunnelDialog({
     dashboardId,
     initialName: `${funnel.name} (copy)`,
     initialIsStrict: funnel.isStrict,
-    initialSteps: funnel.steps.map(({ step }) => ({ ...step, id: generateTempId() })),
+    initialSteps: funnel.steps.map(({ step }) => ({
+      ...step,
+      id: generateTempId(),
+      filters: step.filters.map((f) => ({ ...f, id: generateTempId() })),
+    })),
   });
 
   const isCreateValid = useMemo(
@@ -88,7 +92,11 @@ export function CloneFunnelDialog({ funnel, disabled }: CloneFunnelDialogProps) 
       reset({
         name: `${funnel.name} (copy)`,
         isStrict: funnel.isStrict,
-        steps: funnel.steps.map(({ step }) => ({ ...step, id: generateTempId() })),
+        steps: funnel.steps.map(({ step }) => ({
+          ...step,
+          id: generateTempId(),
+          filters: step.filters.map((f) => ({ ...f, id: generateTempId() })),
+        })),
       });
     }
     setIsOpen(open);
@@ -103,7 +111,7 @@ export function CloneFunnelDialog({ funnel, disabled }: CloneFunnelDialogProps) 
       </DialogTrigger>
       <DialogContent
         aria-describedby={undefined}
-        className='bg-background flex max-h-[90dvh] min-h-[70dvh] w-[70dvw] !max-w-[1000px] flex-col'
+        className='bg-background flex flex-col w-screen h-dvh max-w-none rounded-none border-0 sm:w-[80dvw] sm:h-auto sm:max-h-[90dvh] sm:min-h-[70dvh] sm:!max-w-7xl sm:rounded-lg sm:border'
       >
         <DialogHeader>
           <DialogTitle>{t('title')}</DialogTitle>
@@ -117,18 +125,17 @@ export function CloneFunnelDialog({ funnel, disabled }: CloneFunnelDialogProps) 
           setFunnelSteps={setFunnelSteps}
           updateFunnelStep={updateFunnelStep}
           removeFunnelStep={removeFunnelStep}
-          searchableFunnelSteps={searchableFunnelSteps}
           funnelPreview={funnelPreview}
           emptySteps={emptySteps}
-          isPreviewLoading={isPreviewLoading}
+          previewStatus={previewStatus}
+          previewRefetching={previewRefetching}
           hasAttemptedSubmit={hasAttemptedSubmit}
+          initialOpenId={undefined}
           labels={{
             name: t('name'),
             namePlaceholder: t('namePlaceholder'),
             strictMode: t('strictMode'),
             addStep: t('addStep'),
-            livePreview: t('livePreview'),
-            defineAtLeastTwoSteps: t('defineAtLeastTwoSteps'),
           }}
         />
         <DialogFooter className='flex items-end justify-end gap-2'>

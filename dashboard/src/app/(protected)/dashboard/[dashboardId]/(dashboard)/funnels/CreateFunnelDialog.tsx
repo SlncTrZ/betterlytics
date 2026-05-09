@@ -28,8 +28,16 @@ type CreateFunnelDialogProps = {
 };
 
 const createDefaultSteps = () => [
-  { id: generateTempId(), column: 'url' as const, operator: '=' as const, values: [], name: '' },
-  { id: generateTempId(), column: 'url' as const, operator: '=' as const, values: [], name: '' },
+  {
+    id: generateTempId(),
+    name: '',
+    filters: [{ id: generateTempId(), column: 'url' as const, operator: '=' as const, values: [] }],
+  },
+  {
+    id: generateTempId(),
+    name: '',
+    filters: [{ id: generateTempId(), column: 'url' as const, operator: '=' as const, values: [] }],
+  },
 ];
 
 export function CreateFunnelDialog({ triggerText, triggerVariant, disabled }: CreateFunnelDialogProps) {
@@ -46,11 +54,11 @@ export function CreateFunnelDialog({ triggerText, triggerVariant, disabled }: Cr
     addEmptyFunnelStep,
     updateFunnelStep,
     removeFunnelStep,
-    searchableFunnelSteps,
     funnelPreview,
     emptySteps,
     reset,
-    isPreviewLoading,
+    previewStatus,
+    previewRefetching,
     setFunnelSteps,
   } = useFunnelDialog({
     dashboardId,
@@ -94,6 +102,12 @@ export function CreateFunnelDialog({ triggerText, triggerVariant, disabled }: Cr
     }
   }, []);
 
+  const handleCancel = useCallback(() => {
+    setIsOpen(false);
+    setHasAttemptedSubmit(false);
+    reset({ name: '', isStrict: false, steps: createDefaultSteps() });
+  }, [reset]);
+
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
@@ -104,7 +118,7 @@ export function CreateFunnelDialog({ triggerText, triggerVariant, disabled }: Cr
       </DialogTrigger>
       <DialogContent
         aria-describedby={undefined}
-        className='bg-background flex max-h-[90dvh] min-h-[70dvh] w-[70dvw] !max-w-[1000px] flex-col'
+        className='bg-background flex flex-col w-screen h-dvh max-w-none rounded-none border-0 sm:w-[80dvw] sm:h-auto sm:max-h-[90dvh] sm:min-h-[70dvh] sm:!max-w-7xl sm:rounded-lg sm:border'
       >
         <DialogHeader>
           <DialogTitle>{t('create.createFunnel')}</DialogTitle>
@@ -118,22 +132,21 @@ export function CreateFunnelDialog({ triggerText, triggerVariant, disabled }: Cr
           setFunnelSteps={setFunnelSteps}
           updateFunnelStep={updateFunnelStep}
           removeFunnelStep={removeFunnelStep}
-          searchableFunnelSteps={searchableFunnelSteps}
           funnelPreview={funnelPreview}
           emptySteps={emptySteps}
-          isPreviewLoading={isPreviewLoading}
+          previewStatus={previewStatus}
+          previewRefetching={previewRefetching}
           hasAttemptedSubmit={hasAttemptedSubmit}
+          initialOpenId={funnelSteps[0]?.id}
           labels={{
             name: t('create.name'),
             namePlaceholder: t('create.namePlaceholder'),
             strictMode: t('create.strictMode'),
             addStep: t('create.addStep'),
-            livePreview: t('create.livePreview'),
-            defineAtLeastTwoSteps: t('preview.defineAtLeastTwoSteps'),
           }}
         />
         <DialogFooter className='flex items-end justify-end gap-2'>
-          <Button variant='outline' className='w-30 cursor-pointer' onClick={() => setIsOpen(false)}>
+          <Button variant='outline' className='w-30 cursor-pointer' onClick={handleCancel}>
             {t('create.cancel')}
           </Button>
           <Button variant='default' className='w-30 cursor-pointer' onClick={handleCreateFunnel}>

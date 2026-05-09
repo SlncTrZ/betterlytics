@@ -51,10 +51,10 @@ export function EditFunnelDialog({ funnel, disabled }: EditFunnelDialogProps) {
     setFunnelSteps,
     updateFunnelStep,
     removeFunnelStep,
-    searchableFunnelSteps,
     funnelPreview,
     emptySteps,
-    isPreviewLoading,
+    previewStatus,
+    previewRefetching,
     reset,
   } = useFunnelDialog({
     dashboardId,
@@ -133,7 +133,7 @@ export function EditFunnelDialog({ funnel, disabled }: EditFunnelDialogProps) {
       </DialogTrigger>
       <DialogContent
         aria-describedby={undefined}
-        className='bg-background flex max-h-[90dvh] min-h-[70dvh] w-[70dvw] !max-w-[1000px] flex-col'
+        className='bg-background flex flex-col w-screen h-dvh max-w-none rounded-none border-0 sm:w-[80dvw] sm:h-auto sm:max-h-[90dvh] sm:min-h-[70dvh] sm:!max-w-7xl sm:rounded-lg sm:border'
       >
         <DialogHeader>
           <DialogTitle>{t('edit.title')}</DialogTitle>
@@ -147,17 +147,16 @@ export function EditFunnelDialog({ funnel, disabled }: EditFunnelDialogProps) {
           setFunnelSteps={setFunnelSteps}
           updateFunnelStep={updateFunnelStep}
           removeFunnelStep={removeFunnelStep}
-          searchableFunnelSteps={searchableFunnelSteps}
           funnelPreview={funnelPreview}
           emptySteps={emptySteps}
-          isPreviewLoading={isPreviewLoading}
+          previewStatus={previewStatus}
+          previewRefetching={previewRefetching}
           hasAttemptedSubmit={hasAttemptedSubmit}
+          initialOpenId={undefined}
           labels={{
             name: t('edit.name'),
             strictMode: t('edit.strictMode'),
             addStep: t('edit.addStep'),
-            livePreview: t('edit.livePreview'),
-            defineAtLeastTwoSteps: t('preview.defineAtLeastTwoSteps'),
           }}
         />
         <DialogFooter className='flex items-end justify-end gap-2'>

@@ -2391,6 +2391,7 @@
         "title": "Filtre",
         "emptyNoneSelected": "Ingen filtre valgt – klik Anvend for at gemme",
         "addFilter": "Tilføj filter",
+        "addFilterPlaceholder": "Tilføj et eller flere filtre",
         "cancel": "Annuller",
         "apply": "Anvend",
         "selectValue": "Vælg en værdi",
@@ -2433,7 +2434,20 @@
         "create": "Opret",
         "createDisabledHint": "Angiv et tragtnavn og definér mindst to trin. <br></br> Hvert trin skal have både et navn og en valgt værdi.",
         "successMessage": "Tragt oprettet!",
-        "errorMessage": "Tragtoprettelse mislykkedes!"
+        "errorMessage": "Tragtoprettelse mislykkedes!",
+        "filterCount": {
+          "none": "Ingen filtre",
+          "one": "1 filter",
+          "many": "{count} filtre"
+        },
+        "aria": {
+          "deleteStep": "Slet trin {index}",
+          "reorderStep": "Omarranger trin {index}",
+          "toggleStep": "Vis/skjul trin {index}"
+        },
+        "tooltip": {
+          "deleteStep": "Slet dette tragttrin"
+        }
       },
       "edit": {
         "title": "Rediger tragt",
