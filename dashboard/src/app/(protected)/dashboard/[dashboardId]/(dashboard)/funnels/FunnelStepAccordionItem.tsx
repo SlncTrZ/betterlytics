@@ -141,7 +141,7 @@ function FunnelStepAccordionItemComponent({
           {/* Step number — half outside the card on the left edge */}
           <Badge
             aria-hidden
-            className='font-mono pointer-events-none absolute top-1/2 left-0 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full'
+            className='font-mono tabular-nums px-1.5 absolute top-1/2 left-0 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full cursor-grab active:cursor-grabbing'
           >
             {index + 1}
           </Badge>
