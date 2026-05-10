@@ -2,14 +2,6 @@
 
 import { Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { useTranslations } from 'next-intl';
 import { useCallback, useMemo, useState } from 'react';
 import { updateFunnelAction } from '@/app/actions/index.actions';
@@ -20,6 +12,7 @@ import { useFunnelDialog } from '@/hooks/use-funnel-dialog';
 import { UpdateFunnelSchema, type FunnelStep } from '@/entities/analytics/funnels.entities';
 import { toast } from 'sonner';
 import { FunnelDialogContent } from './FunnelDialogContent';
+import { FunnelDialogLayout } from './FunnelDialogLayout';
 import { stableStringify } from '@/utils/stableStringify';
 
 type EditFunnelDialogProps = {
@@ -125,50 +118,47 @@ export function EditFunnelDialog({ funnel, disabled }: EditFunnelDialogProps) {
   );
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
+    <FunnelDialogLayout
+      open={isOpen}
+      onOpenChange={handleOpenChange}
+      title={t('edit.title')}
+      trigger={
         <Button variant='ghost' className='cursor-pointer' disabled={disabled}>
           <Pencil className='h-4 w-4' />
         </Button>
-      </DialogTrigger>
-      <DialogContent
-        aria-describedby={undefined}
-        className='bg-background flex flex-col w-screen h-dvh max-w-none rounded-none border-0 sm:w-[80dvw] sm:h-auto sm:max-h-[90dvh] sm:min-h-[70dvh] sm:!max-w-7xl sm:rounded-lg sm:border'
-      >
-        <DialogHeader>
-          <DialogTitle>{t('edit.title')}</DialogTitle>
-        </DialogHeader>
-        <FunnelDialogContent
-          metadata={metadata}
-          setName={setName}
-          setIsStrict={setIsStrict}
-          funnelSteps={funnelSteps}
-          addEmptyFunnelStep={addEmptyFunnelStep}
-          setFunnelSteps={setFunnelSteps}
-          updateFunnelStep={updateFunnelStep}
-          removeFunnelStep={removeFunnelStep}
-          funnelPreview={funnelPreview}
-          emptySteps={emptySteps}
-          previewStatus={previewStatus}
-          previewRefetching={previewRefetching}
-          hasAttemptedSubmit={hasAttemptedSubmit}
-          initialOpenId={undefined}
-          labels={{
-            name: t('edit.name'),
-            strictMode: t('edit.strictMode'),
-            addStep: t('edit.addStep'),
-          }}
-        />
-        <DialogFooter className='flex items-end justify-end gap-2'>
+      }
+      footer={
+        <>
           <Button variant='outline' className='w-30 cursor-pointer' onClick={() => setIsOpen(false)}>
             {t('edit.cancel')}
           </Button>
-
           <Button variant='default' className='w-30 cursor-pointer' onClick={handleEditFunnel} disabled={!isDirty}>
             {t('edit.save')}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </>
+      }
+    >
+      <FunnelDialogContent
+        metadata={metadata}
+        setName={setName}
+        setIsStrict={setIsStrict}
+        funnelSteps={funnelSteps}
+        addEmptyFunnelStep={addEmptyFunnelStep}
+        setFunnelSteps={setFunnelSteps}
+        updateFunnelStep={updateFunnelStep}
+        removeFunnelStep={removeFunnelStep}
+        funnelPreview={funnelPreview}
+        emptySteps={emptySteps}
+        previewStatus={previewStatus}
+        previewRefetching={previewRefetching}
+        hasAttemptedSubmit={hasAttemptedSubmit}
+        initialOpenId={undefined}
+        labels={{
+          name: t('edit.name'),
+          strictMode: t('edit.strictMode'),
+          addStep: t('edit.addStep'),
+        }}
+      />
+    </FunnelDialogLayout>
   );
 }

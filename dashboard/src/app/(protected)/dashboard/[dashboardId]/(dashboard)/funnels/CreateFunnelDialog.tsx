@@ -2,14 +2,6 @@
 
 import { PlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { useTranslations } from 'next-intl';
 import { ComponentProps, useCallback, useMemo, useState } from 'react';
 import { postFunnelAction } from '@/app/actions/index.actions';
@@ -20,6 +12,7 @@ import { useFunnelDialog } from '@/hooks/use-funnel-dialog';
 import { CreateFunnelSchema } from '@/entities/analytics/funnels.entities';
 import { generateTempId } from '@/utils/temporaryId';
 import { FunnelDialogContent } from './FunnelDialogContent';
+import { FunnelDialogLayout } from './FunnelDialogLayout';
 
 type CreateFunnelDialogProps = {
   triggerText?: string;
@@ -109,51 +102,49 @@ export function CreateFunnelDialog({ triggerText, triggerVariant, disabled }: Cr
   }, [reset]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
+    <FunnelDialogLayout
+      open={isOpen}
+      onOpenChange={handleOpenChange}
+      title={t('create.createFunnel')}
+      trigger={
         <Button variant={triggerVariant || 'ghost'} className='cursor-pointer' disabled={disabled}>
           <PlusIcon className='h-4 w-4' />
           {triggerText}
         </Button>
-      </DialogTrigger>
-      <DialogContent
-        aria-describedby={undefined}
-        className='bg-background flex flex-col w-screen h-dvh max-w-none rounded-none border-0 sm:w-[80dvw] sm:h-auto sm:max-h-[90dvh] sm:min-h-[70dvh] sm:!max-w-7xl sm:rounded-lg sm:border'
-      >
-        <DialogHeader>
-          <DialogTitle>{t('create.createFunnel')}</DialogTitle>
-        </DialogHeader>
-        <FunnelDialogContent
-          metadata={metadata}
-          setName={setName}
-          setIsStrict={setIsStrict}
-          funnelSteps={funnelSteps}
-          addEmptyFunnelStep={addEmptyFunnelStep}
-          setFunnelSteps={setFunnelSteps}
-          updateFunnelStep={updateFunnelStep}
-          removeFunnelStep={removeFunnelStep}
-          funnelPreview={funnelPreview}
-          emptySteps={emptySteps}
-          previewStatus={previewStatus}
-          previewRefetching={previewRefetching}
-          hasAttemptedSubmit={hasAttemptedSubmit}
-          initialOpenId={funnelSteps[0]?.id}
-          labels={{
-            name: t('create.name'),
-            namePlaceholder: t('create.namePlaceholder'),
-            strictMode: t('create.strictMode'),
-            addStep: t('create.addStep'),
-          }}
-        />
-        <DialogFooter className='flex items-end justify-end gap-2'>
+      }
+      footer={
+        <>
           <Button variant='outline' className='w-30 cursor-pointer' onClick={handleCancel}>
             {t('create.cancel')}
           </Button>
           <Button variant='default' className='w-30 cursor-pointer' onClick={handleCreateFunnel}>
             {t('create.create')}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </>
+      }
+    >
+      <FunnelDialogContent
+        metadata={metadata}
+        setName={setName}
+        setIsStrict={setIsStrict}
+        funnelSteps={funnelSteps}
+        addEmptyFunnelStep={addEmptyFunnelStep}
+        setFunnelSteps={setFunnelSteps}
+        updateFunnelStep={updateFunnelStep}
+        removeFunnelStep={removeFunnelStep}
+        funnelPreview={funnelPreview}
+        emptySteps={emptySteps}
+        previewStatus={previewStatus}
+        previewRefetching={previewRefetching}
+        hasAttemptedSubmit={hasAttemptedSubmit}
+        initialOpenId={funnelSteps[0]?.id}
+        labels={{
+          name: t('create.name'),
+          namePlaceholder: t('create.namePlaceholder'),
+          strictMode: t('create.strictMode'),
+          addStep: t('create.addStep'),
+        }}
+      />
+    </FunnelDialogLayout>
   );
 }

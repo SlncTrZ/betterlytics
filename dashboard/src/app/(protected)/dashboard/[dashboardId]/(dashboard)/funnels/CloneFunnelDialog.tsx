@@ -3,14 +3,6 @@
 import { Copy } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { useDashboardId } from '@/hooks/use-dashboard-id';
@@ -21,6 +13,7 @@ import { postFunnelAction } from '@/app/actions/index.actions';
 import { trpc } from '@/trpc/client';
 import { generateTempId } from '@/utils/temporaryId';
 import { FunnelDialogContent } from './FunnelDialogContent';
+import { FunnelDialogLayout } from './FunnelDialogLayout';
 
 type CloneFunnelDialogProps = {
   funnel: PresentedFunnel;
@@ -103,50 +96,48 @@ export function CloneFunnelDialog({ funnel, disabled }: CloneFunnelDialogProps) 
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
+    <FunnelDialogLayout
+      open={isOpen}
+      onOpenChange={handleOpenChange}
+      title={t('title')}
+      trigger={
         <Button variant='ghost' className='cursor-pointer' disabled={disabled}>
           <Copy className='h-4 w-4' />
         </Button>
-      </DialogTrigger>
-      <DialogContent
-        aria-describedby={undefined}
-        className='bg-background flex flex-col w-screen h-dvh max-w-none rounded-none border-0 sm:w-[80dvw] sm:h-auto sm:max-h-[90dvh] sm:min-h-[70dvh] sm:!max-w-7xl sm:rounded-lg sm:border'
-      >
-        <DialogHeader>
-          <DialogTitle>{t('title')}</DialogTitle>
-        </DialogHeader>
-        <FunnelDialogContent
-          metadata={metadata}
-          setName={setName}
-          setIsStrict={setIsStrict}
-          funnelSteps={funnelSteps}
-          addEmptyFunnelStep={addEmptyFunnelStep}
-          setFunnelSteps={setFunnelSteps}
-          updateFunnelStep={updateFunnelStep}
-          removeFunnelStep={removeFunnelStep}
-          funnelPreview={funnelPreview}
-          emptySteps={emptySteps}
-          previewStatus={previewStatus}
-          previewRefetching={previewRefetching}
-          hasAttemptedSubmit={hasAttemptedSubmit}
-          initialOpenId={undefined}
-          labels={{
-            name: t('name'),
-            namePlaceholder: t('namePlaceholder'),
-            strictMode: t('strictMode'),
-            addStep: t('addStep'),
-          }}
-        />
-        <DialogFooter className='flex items-end justify-end gap-2'>
+      }
+      footer={
+        <>
           <Button variant='outline' className='w-30 cursor-pointer' onClick={() => setIsOpen(false)}>
             {t('cancel')}
           </Button>
           <Button variant='default' className='w-30 cursor-pointer' onClick={handleCloneFunnel}>
             {t('cta')}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </>
+      }
+    >
+      <FunnelDialogContent
+        metadata={metadata}
+        setName={setName}
+        setIsStrict={setIsStrict}
+        funnelSteps={funnelSteps}
+        addEmptyFunnelStep={addEmptyFunnelStep}
+        setFunnelSteps={setFunnelSteps}
+        updateFunnelStep={updateFunnelStep}
+        removeFunnelStep={removeFunnelStep}
+        funnelPreview={funnelPreview}
+        emptySteps={emptySteps}
+        previewStatus={previewStatus}
+        previewRefetching={previewRefetching}
+        hasAttemptedSubmit={hasAttemptedSubmit}
+        initialOpenId={undefined}
+        labels={{
+          name: t('name'),
+          namePlaceholder: t('namePlaceholder'),
+          strictMode: t('strictMode'),
+          addStep: t('addStep'),
+        }}
+      />
+    </FunnelDialogLayout>
   );
 }
